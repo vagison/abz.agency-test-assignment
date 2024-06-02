@@ -18,6 +18,11 @@ const dbConfig = {
   dbName: process.env.DB_NAME,
 };
 
+const jwtConfig = {
+  secret: process.env.JWT_SECRET || 'cats and mouse',
+  expiresIn: +process.env.JWT_EXPIRES_IN || 2400,
+};
+
 export {
-  corsConfig, dbConfig,
+  corsConfig, dbConfig, jwtConfig,
 };

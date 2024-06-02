@@ -12,8 +12,9 @@ function errorHandler(error, req, res, _) {
   const message = error.message || 'Something went wrong';
 
   const err = {
-    statusCode,
+    success: false,
     message,
+    fails: error.fails,
     name: process.env.NODE_ENV === 'development' ? name : undefined,
     stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
   };

@@ -7,12 +7,13 @@ import bodyParser from 'body-parser';
 import morgan from 'morgan';
 import consola from 'consola';
 
-// importing other stuff
+// importing and configuring other stuff
+import './config/passport';
 import connectToDb from './utils/db';
 import { corsConfig } from './config';
 import cookieParser from './middlewares/cookie';
 import indexRouter from './routes';
-import { errorHandler, errorLogger, invalidPathHandler } from './middlewares/error';
+import { errorHandler, errorLogger, invalidPathHandler } from './middlewares';
 
 async function start() {
   await connectToDb();
