@@ -9,7 +9,7 @@ import consola from 'consola';
 
 // importing and configuring other stuff
 import './config/passport';
-import connectToDb from './utils/db';
+import { connectToDb } from './utils/db';
 import { corsConfig } from './config';
 import cookieParser from './middlewares/cookie';
 import indexRouter from './routes';
