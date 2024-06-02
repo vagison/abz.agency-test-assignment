@@ -7,12 +7,14 @@ import morgan from 'morgan';
 import consola from 'consola';
 
 // importing other stuff
+import connectToDb from './utils/db';
 import { corsConfig } from './config';
 import cookieParser from './middlewares/cookie';
 import indexRouter from './routes';
 import { errorHandler, errorLogger, invalidPathHandler } from './middlewares/error';
 
 async function start() {
+  await connectToDb();
   const app = express();
   const server = http.createServer(app);
   app.enable('trust proxy');
