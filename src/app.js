@@ -1,5 +1,6 @@
 // importing packages
 import http from 'http';
+import path from 'path';
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
@@ -23,6 +24,7 @@ async function start() {
   app.use(bodyParser.json());
   app.use(cookieParser());
   app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(express.static(path.join(__dirname, 'public')));
   app.use('/', indexRouter);
   app.use(invalidPathHandler);
   app.use(errorLogger);

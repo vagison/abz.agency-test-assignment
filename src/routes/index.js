@@ -4,6 +4,6 @@ import testRouter from './test';
 
 const indexRouter = express.Router();
 
-indexRouter.use('/test', testRouter);
+indexRouter.use('/api/test', testRouter);
 
 export default indexRouter;
