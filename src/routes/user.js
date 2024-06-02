@@ -10,6 +10,6 @@ const userRouter = express.Router();
 
 const userForm = multer();
 
-userRouter.post('/', jwtMiddleware, userForm.any(), requestValidator.validate(registrationValidatorSchema), throwError, userController.registration);
+userRouter.post('/', jwtMiddleware.jwt, userForm.any(), requestValidator.validate(registrationValidatorSchema), throwError, userController.registration);
 
 export default userRouter;
