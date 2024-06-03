@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/extensions
-import { BASE_URL } from '../configs/urls.js';
+const BASE_URL = 'http://localhost:3000';
 
 let usersRendered = false; // To keep track of whether users are rendered
 let currentPage = 1; // To keep track of the current page of users
