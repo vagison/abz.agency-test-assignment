@@ -16,6 +16,7 @@ const dbConfig = {
   dbUser: process.env.DB_USER,
   dbPassword: process.env.DB_PASSWORD,
   dbName: process.env.DB_NAME,
+  ssl: !!process.env.DB_SSL,
 };
 
 const jwtConfig = {

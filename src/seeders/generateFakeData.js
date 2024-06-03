@@ -1,8 +1,7 @@
+import consola from 'consola';
 import { faker } from '@faker-js/faker';
-import { connectToDb, client } from '../utils/db';
-import {
-  createPositionsTable, createUsersTable, positionsInsertionQuery, usersInsertionQuery,
-} from './queries';
+import { connectToDb, db } from '../utils/db';
+import { usersQueries, positionsQueries } from '../queries';
 
 function generateUkrainePhoneNumber() {
   const countryCode = '+380'; // Ukraine country code
@@ -15,27 +14,22 @@ function generateUkrainePhoneNumber() {
     return randomNumber.toString().padStart(7, '0');
   })();
 
-  return `${countryCode} ${areaCode} ${subscriberNumber}`;
+  return `${countryCode}${areaCode}${subscriberNumber}`;
 }
 
 function generateRandomUser() {
   const user = {
     email: '',
-    firstName: faker.person.firstName(),
-    lastName: faker.person.lastName(),
+    name: faker.person.firstName(),
     phone: generateUkrainePhoneNumber(),
     position_id: 1,
   };
 
   user.email = faker.internet.email({
-    firstName: user.firstName,
-    lastName: user.lastName,
+    firstName: user.name,
     provider: 'fake.com',
   });
   user.email = user.email.toLowerCase();
-  user.name = `${user.firstName} ${user.lastName}`;
-  delete user.firstName;
-  delete user.lastName;
 
   return user;
 }
@@ -61,34 +55,32 @@ function generateRandomPositions(numberOfPositions) {
 async function writeToDb(positions, users) {
   await connectToDb();
 
-  // =================================================
   // Creating positions and users tables
-  await client.query(createPositionsTable);
+  await db.query(positionsQueries.createPositionsTable());
   console.log('Table "positions" created successfully');
-
-  await client.query(createUsersTable);
+  await db.query(usersQueries.createUsersTable());
   console.log('Table "users" created successfully');
-  // =================================================
 
-  // =====================================================================================
   // Inserting data into positions and users tables
-  const [positionsInsertQuery, positionsQueryParams] = positionsInsertionQuery(positions);
-  await client.query(positionsInsertQuery, positionsQueryParams);
+  const [positionsInsertQuery, positionsQueryParams] = positionsQueries.positionsInsertionQuery(positions);
+  await db.query(positionsInsertQuery, positionsQueryParams);
   console.log('Data inserted into "positions" table successfully');
-
-  const [usersInsertQuery, usersQueryParams] = usersInsertionQuery(users);
-  await client.query(usersInsertQuery, usersQueryParams);
+  const [usersInsertQuery, usersQueryParams] = usersQueries.usersInsertionQuery(users);
+  await db.query(usersInsertQuery, usersQueryParams);
   console.log('Data inserted into "users" table successfully');
-  // =====================================================================================
 }
 
 async function run() {
+  consola.success({ message: 'Starting DB seeding', badge: true });
+
   try {
     // Creating positions and users with the help of faker-js
-    const positions = generateRandomPositions(100);
-    const users = generateRandomUsers(45).map((user) => ({ ...user, position_id: Math.floor(Math.random() * 100) + 1 }));
+    const numberOfPositions = 100;
+    const positions = generateRandomPositions(numberOfPositions);
+    const numberOfUsers = 45;
+    const users = generateRandomUsers(numberOfUsers).map((user) => ({ ...user, position_id: Math.floor(Math.random() * numberOfPositions) + 1 }));
 
-    // Writing generated data into db
+    // Writing generated data into DB
     await writeToDb(positions, users);
 
     // Exiting process on success

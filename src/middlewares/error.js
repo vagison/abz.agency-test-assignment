@@ -1,4 +1,5 @@
 import PrettyError from 'pretty-error';
+import { errorMessagesConstants } from '../constants';
 
 function errorLogger(error, req, res, next) {
   const pe = new PrettyError();
@@ -8,13 +9,24 @@ function errorLogger(error, req, res, next) {
 
 function errorHandler(error, req, res, _) {
   const name = error.name || 'Internal Server Error';
-  const statusCode = error.status || 500;
-  const message = error.message || 'Something went wrong';
+  let statusCode = error.status || 500;
+  let message = error.message || 'Something went wrong';
+  let { fails } = error;
+
+  if (error.code === 'LIMIT_FILE_SIZE') {
+    message = 'Validation failed';
+    statusCode = 422;
+    fails = {
+      photo: [
+        errorMessagesConstants.User.PhotoTooLarge,
+      ],
+    };
+  }
 
   const err = {
     success: false,
     message,
-    fails: error.fails,
+    fails,
     name: process.env.NODE_ENV === 'development' ? name : undefined,
     stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
   };

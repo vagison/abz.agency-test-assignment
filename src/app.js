@@ -8,9 +8,9 @@ import morgan from 'morgan';
 import consola from 'consola';
 
 // importing and configuring other stuff
-import './config/passport';
+import './configs/passport';
 import { connectToDb } from './utils/db';
-import { corsConfig } from './config';
+import { corsConfig } from './configs';
 import cookieParser from './middlewares/cookie';
 import indexRouter from './routes';
 import { errorHandler, errorLogger, invalidPathHandler } from './middlewares';
@@ -26,6 +26,7 @@ async function start() {
   app.use(cookieParser());
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(express.static(path.join(__dirname, 'public')));
+  app.use('/storage', express.static(path.join(__dirname, '..', 'storage')));
   app.use('/', indexRouter);
   app.use(invalidPathHandler);
   app.use(errorLogger);

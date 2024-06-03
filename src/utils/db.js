@@ -1,21 +1,22 @@
 import consola from 'consola';
 
-import { dbConfig } from '../config';
+import { dbConfig } from '../configs';
 
 const { Client } = require('pg');
 
-const client = new Client({
+const db = new Client({
   host: dbConfig.dbHost,
   port: dbConfig.dbPort,
   user: dbConfig.dbUser,
   password: dbConfig.dbPassword,
   database: dbConfig.dbName,
+  ssl: dbConfig.ssl,
 });
 
 async function connectToDb() {
   try {
     // Connect to the PostgreSQL server
-    await client.connect();
+    await db.connect();
     consola.success({ message: 'DB connection established', badge: true });
   } catch (err) {
     consola.error({ message: `DB connection error: "${err}"`, badge: true });
@@ -23,4 +24,4 @@ async function connectToDb() {
   }
 }
 
-export { connectToDb, client };
+export { connectToDb, db };

@@ -3,11 +3,39 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Static Site</title>
-    <link rel="stylesheet" href="/css/styles.css" />
+    <title>Node.js Developer Test Assignment for abz.agency</title>
+    <link rel="stylesheet" type="text/css" href="./css/styles.css" />
   </head>
   <body>
-    <h1>Welcome to My Static Site!</h1>
-    <script src="/js/scripts.js"></script>
+    <div id="buttons" style="justify-content: center">
+      <button id="fetchUsersData">Get Users</button>
+      <button id="createUserBtn">Create New User</button>
+    </div>
+    <div id="contentContainer">
+      <div id="usersBlock">
+        <div id="usersContainer"></div>
+        <button id="showMoreBtn" style="display: none">Show More</button>
+      </div>
+
+      <!-- Form for creating a new user -->
+      <div id="createUserFormBlock" style="display: none">
+        <form id="userForm" action="/api/v1/users" method="POST" enctype="multipart/form-data">
+          <!-- <form id="userForm" action="/upload" enctype="multipart/form-data"> -->
+          <label for="name">Name:</label><br />
+          <input type="text" id="name" name="name" /><br />
+          <label for="email">Email:</label><br />
+          <input type="email" id="email" name="email" /><br />
+          <label for="phone">Phone:</label><br />
+          <input type="text" id="phone" name="phone" /><br />
+          <label for="position">Position ID:</label><br />
+          <input type="text" id="position" name="position_id" /><br />
+          <label for="photo">Photo:</label><br />
+          <input type="file" id="photo" name="photo" /><br /><br />
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+    </div>
+
+    <script src="js/scripts.js" type="module"></script>
   </body>
 </html>

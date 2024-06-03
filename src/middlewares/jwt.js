@@ -19,11 +19,14 @@ function jwt(req, res, next) {
     }
 
     // Used token
-    if (usedTokens[req.headers.token].used) {
+    if (usedTokens[req.headers.token] && usedTokens[req.headers.token].used) {
       return next(createError.Unauthorized(errorMessagesConstants.User.ExpiredToken));
     }
 
-    usedTokens[req.headers.token].used = true;
+    // Marking the token as used
+    if (process.env.NODE_ENV === 'production') {
+      usedTokens[req.headers.token].used = true;
+    }
 
     return next();
   })(req, res, next);

@@ -1,4 +1,6 @@
 import { errorMessagesConstants } from '../constants';
+import { usersQueries } from '../queries';
+import { db } from './db';
 
 const registrationValidatorSchema = {
   name: {
@@ -10,41 +12,77 @@ const registrationValidatorSchema = {
   },
   email: {
     trim: true,
-    // custom: {
-    //   options: async (email) => {
-    //     const user = await User.findOne({ email });
-    //     if (user) {
-    //       return Promise.reject(new Error('E-mail already in use'));
-    //     }
-    //     return '';
-    //   },
-    // },
     isEmail: {
       bail: true,
       errorMessage: errorMessagesConstants.User.InvalidEmail,
+    },
+    custom: {
+      options: async (email) => {
+        const user = (await db.query(usersQueries.getUserWithEmail(email))).rowCount;
+        if (user) {
+          return Promise.reject(new Error(errorMessagesConstants.User.UserExists));
+        }
+        return '';
+      },
     },
   },
   phone: {
     exists: true,
     errorMessage: errorMessagesConstants.User.PhoneRequired,
+    custom: {
+      options: async (phone) => {
+        if (!phone.startsWith('+380')) {
+          return Promise.reject(new Error(errorMessagesConstants.User.PhoneNumberInvalid));
+        }
+
+        const user = (await db.query(usersQueries.getUserWithPhoneNumber(phone))).rowCount;
+        if (user) {
+          return Promise.reject(new Error(errorMessagesConstants.User.UserExists));
+        }
+
+        return '';
+      },
+    },
   },
   position_id: {
     exists: {
-      errorMessage: errorMessagesConstants.User.PositionIdRequired,
+      errorMessage: errorMessagesConstants.Position.PositionIdRequired,
     },
     isInt: {
-      errorMessage: errorMessagesConstants.User.PositionIdNonInteger,
+      errorMessage: errorMessagesConstants.Position.PositionIdNonInteger,
     },
     custom: {
       options: (value) => parseInt(value, 10) > 0,
-      errorMessage: errorMessagesConstants.User.PositionIdNonPositive,
+      errorMessage: errorMessagesConstants.Position.PositionIdNonPositive,
     },
   },
-  // photo: [
-  //   'The photo may not be greater than 5 Mbytes.',
-  // ],
+};
+
+const getUsersValidatorSchema = {
+  count: {
+    optional: true,
+    isInt: {
+      errorMessage: errorMessagesConstants.User.CountNonInteger,
+    },
+    custom: {
+      options: (value) => parseInt(value, 10) > 0,
+      errorMessage: errorMessagesConstants.User.CountNonPositive,
+    },
+  },
+  page: {
+    optional: true,
+    isInt: {
+      errorMessage: errorMessagesConstants.User.PageNonInteger,
+    },
+    custom: {
+      options: (value) => parseInt(value, 10) > 0,
+      errorMessage: errorMessagesConstants.User.PageNonPositive,
+    },
+  },
 };
 
 export {
   registrationValidatorSchema,
+  getUsersValidatorSchema,
+
 };

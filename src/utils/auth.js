@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { jwtConfig } from '../config';
+import { jwtConfig } from '../configs';
 
 const generateJWT = () => jwt.sign({ signed: 'true' }, jwtConfig.secret, { expiresIn: jwtConfig.expiresIn });
 
