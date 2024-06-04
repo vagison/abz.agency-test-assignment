@@ -9,6 +9,7 @@ const constants = {
     PhoneRequired: 'The phone field is required.',
     PhoneNumberInvalid: 'Invalid phone number',
     PhotoTooLarge: 'The photo may not be greater than 5 Mbytes.',
+    IncorrectImageFormat: 'Only .jpg and .png files are allowed!',
     UserExists: 'User with this phone or email already exist',
     UserWithIdNotExists: 'The user with the requestedid does not exist',
     UserIdNotInteger: 'The user must be an integer.',

@@ -7,6 +7,7 @@ import { requestValidator, jwtMiddleware } from '../middlewares';
 import { throwRegistrationValidationError } from '../middlewares/user/create';
 import { throwGetUsersValidationError } from '../middlewares/user/get';
 import { registrationValidatorSchema, getUsersValidatorSchema } from '../utils/schemas';
+import { fileFilter } from '../utils/multer';
 
 const userRouter = express.Router();
 
@@ -31,6 +32,7 @@ const upload = multer({
   limits: {
     fileSize: 5 * 1024 * 1024, // 5 MB
   },
+  fileFilter, // Add the file filter here
 });
 
 userRouter.post('/', jwtMiddleware.jwt, upload.single('photo'), requestValidator.validate(registrationValidatorSchema), throwRegistrationValidationError, userController.registration);
