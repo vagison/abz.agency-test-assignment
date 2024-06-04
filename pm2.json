@@ -1,7 +1,7 @@
 {
   "apps": [
     {
-      "name": "abz.agency-test-assignment",
+      "name": "abz",
       "script": "./dist/app.js",
       "watch": true,
       "ignore_watch": [
